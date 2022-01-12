@@ -1,0 +1,14 @@
+export const primary1 = '#0664B0';
+export const primary = '#1CB4FF';
+export const blue = '#01A1E9';
+export const lightBlue = '#F2F7FC';
+export const white = '#fff';
+export const grey = '#CACACA';
+export const darkGrey = '#9c9c9c';
+export const lightGrey = '#F0F0F0';
+export const redBadge = '#F01714';
+export const black = '#000';
+export const red = 'red';
+export const green = '#46B476';
+export const purple = '#1E2188';
+export const orange = '#F08300';
