@@ -53,7 +53,7 @@ const index = ({navigation}) => {
     <Wrapper>
       <Header title={'Ubah Profile'} back />
       <ScrollView style={styles.body}>
-        <View style={{width: '100%'}}>
+        {/* <View style={{width: '100%'}}>
           <Text style={{marginBottom: 8}} bold>
             Email
           </Text>
@@ -66,8 +66,8 @@ const index = ({navigation}) => {
           <Text style={{marginTop: 4, color: colors.darkGrey}} size={12}>
             Note: Email tidak dapat diubah.
           </Text>
-        </View>
-        <View style={{width: '100%', marginTop: 16}}>
+        </View> */}
+        <View style={{width: '100%'}}>
           <Text style={{marginBottom: 8}} bold>
             Nama
           </Text>

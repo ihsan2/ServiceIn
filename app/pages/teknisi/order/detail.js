@@ -241,6 +241,15 @@ const detail = ({route}) => {
             </Text>
           </View>
 
+          <View style={{marginTop: 10}}>
+            <Text bold style={{}}>
+              Deskripsi:{' '}
+              <Text style={{fontWeight: 'normal'}}>
+                {item.desc ? item?.desc : '-'}
+              </Text>
+            </Text>
+          </View>
+
           {item?.photo && (
             <TouchableOpacity
               onPress={() => navigation.navigate('Image', {uri: item?.photo})}

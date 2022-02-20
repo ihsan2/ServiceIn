@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="com.projectservice">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -29,9 +30,11 @@
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyDh0_cYDi7QnGOaXyax9jN2gdeD-X5jDR0"/>
 
-      <meta-data
+      <!-- <meta-data
           android:name="com.google.firebase.messaging.default_notification_color"
-          android:resource="@color/primary" /> 
+          android:resource="@color/primary" 
+          tools:replace="android:resource"
+          />  -->
           <!-- tools:replace="android:resource"  -->
     </application>
 </manifest>

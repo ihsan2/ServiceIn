@@ -76,6 +76,7 @@ const list = ({navigation, route}) => {
         phone: user.phone,
       },
       cretedAt: Date.now(),
+      desc: data.desc,
     };
 
     setLoad(true);

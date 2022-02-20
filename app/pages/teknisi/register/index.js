@@ -12,7 +12,7 @@ import * as colors from '../../../styles/colors';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
 import MapV from '../../../components/maps/main';
-import {menu, regions} from '../../../dummy';
+import {dist, menu, regions} from '../../../dummy';
 import emailRegex from 'email-regex';
 import uuid from 'react-native-uuid';
 import {useSelector} from 'react-redux';
@@ -45,14 +45,13 @@ const index = ({navigation}) => {
       !email ||
       !password ||
       !phone ||
-      !province ||
       !kota ||
       jasa.filter(k => k.select).length === 0;
     let isValidEmail = emailRegex().test(email);
     let isValidPass = password.length < 6 ? false : true;
     let isExist =
-      users.filter(k => k.email.toLowerCase() === email.toLowerCase()).length >
-      0
+      users.filter(k => k?.email?.toLowerCase() === email.toLowerCase())
+        .length > 0
         ? true
         : false;
     let uid = uuid.v4();
@@ -81,8 +80,8 @@ const index = ({navigation}) => {
       role: 'teknisi',
       uid,
       phone,
-      provinsi: province.provinsi,
-      kota,
+      kecamatan: kota,
+      kota: 'Kab. Jeneponto',
       address,
       lat,
       lng,
@@ -218,7 +217,7 @@ const index = ({navigation}) => {
           <Text style={{marginTop: 5}}>{address}</Text>
         </View>
 
-        <View style={{width: '100%', marginTop: 16}}>
+        {/* <View style={{width: '100%', marginTop: 16}}>
           <Text style={{marginBottom: 8}} bold>
             Provinsi
           </Text>
@@ -235,16 +234,16 @@ const index = ({navigation}) => {
             value={province ? province.provinsi : ''}
             visible={v1}
           />
-        </View>
+        </View> */}
 
         <View style={{width: '100%', marginTop: 16}}>
           <Text style={{marginBottom: 8}} bold>
-            Kota
+            Kecamatan
           </Text>
           <InputPicker
-            data={province?.kota}
-            title={'Pilih Kota'}
-            placeholder={'Pilih Kota'}
+            data={dist}
+            title={'Pilih Kecamtan'}
+            placeholder={'Pilih Kecamatan'}
             close={() => setV2(false)}
             open={() => setV2(true)}
             setValue={x => setKota(x)}

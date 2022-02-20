@@ -25,24 +25,19 @@ const index = ({navigation}) => {
 
   const _login = () => {
     const x = users.filter(k => k.role === 'teknisi');
-    let empty = !email || !password;
+    let empty = !email;
 
     if (empty) {
-      showAlert({text: 'Email dan Password wajib diisi.', type: 'error'});
+      showAlert({text: 'Nomor telepon wajib diisi.', type: 'error'});
       return;
     }
 
     let loginData = x.filter(
-      k => k.email.toLowerCase() === email.toLowerCase(),
+      k => k?.phone?.toLowerCase() === email.toLowerCase(),
     );
 
     if (loginData.length === 0) {
-      showAlert({text: 'Email tidak terdaftar.', type: 'error'});
-      return;
-    }
-
-    if (loginData[0].password !== password) {
-      showAlert({text: 'Password salah.', type: 'error'});
+      showAlert({text: 'User tidak terdaftar.', type: 'error'});
       return;
     }
 
@@ -89,16 +84,16 @@ const index = ({navigation}) => {
         </View>
         <View style={{width: '100%'}}>
           <Text style={{marginBottom: 8}} bold>
-            Email
+            Nomor Telepon
           </Text>
           <Input
-            placeholder={'teknisi@mail.com'}
-            keyboardType="email-address"
+            placeholder={'0812xxxxxxx'}
+            keyboardType="phone-pad"
             value={email}
             onChangeText={x => setEmail(x)}
           />
         </View>
-        <View style={{width: '100%', marginTop: 16}}>
+        {/* <View style={{width: '100%', marginTop: 16}}>
           <Text style={{marginBottom: 8}} bold>
             Password
           </Text>
@@ -107,7 +102,7 @@ const index = ({navigation}) => {
             value={password}
             onChangeText={x => setPassword(x)}
           />
-        </View>
+        </View> */}
 
         <View style={{marginTop: 16}}>
           <Button onPress={_login} fullWidth loading={load}>

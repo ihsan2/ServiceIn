@@ -19,7 +19,7 @@ import Button from '../../../components/button';
 import * as colors from '../../../styles/colors';
 import Geocoder from 'react-native-geocoding';
 import MapV from '../../../components/maps/main';
-import {regions} from '../../../dummy';
+import {dist, regions} from '../../../dummy';
 import Header from '../../../components/header';
 import ModalUpload from '../../../components/modal/upload';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -47,7 +47,7 @@ const index = ({navigation}) => {
   const [lng, setLng] = useState(user?.lng);
   const [address, setAddress] = useState(user?.address);
   const [province, setProvince] = useState(prov);
-  const [kota, setKota] = useState(user?.kota);
+  const [kota, setKota] = useState(user?.kecamatan);
   const [v1, setV1] = useState(false);
   const [v2, setV2] = useState(false);
   const [jasa, setJasa] = useState([]);
@@ -148,11 +148,7 @@ const index = ({navigation}) => {
 
   const _edit = () => {
     let empty =
-      !name ||
-      !phone ||
-      !province ||
-      !kota ||
-      jasa.filter(k => k.select).length === 0;
+      !name || !phone || !kota || jasa.filter(k => k.select).length === 0;
 
     if (empty) {
       showAlert({text: 'Semua data wajib diisi.', type: 'error'});
@@ -163,7 +159,8 @@ const index = ({navigation}) => {
       name,
       phone,
       provinsi: province.provinsi,
-      kota,
+      kecamatan: kota,
+      kota: 'Kab. Jeneponto',
       lat,
       lng,
       address,
@@ -299,31 +296,12 @@ const index = ({navigation}) => {
 
         <View style={{width: '100%', marginTop: 16}}>
           <Text style={{marginBottom: 8}} bold>
-            Provinsi
+            Kecamatan
           </Text>
           <InputPicker
-            data={regions}
-            title={'Pilih Provinsi'}
-            placeholder={'Pilih Provinsi'}
-            close={() => setV1(false)}
-            open={() => setV1(true)}
-            setValue={x => {
-              setProvince(x);
-              setKota('');
-            }}
-            value={province ? province.provinsi : ''}
-            visible={v1}
-          />
-        </View>
-
-        <View style={{width: '100%', marginTop: 16}}>
-          <Text style={{marginBottom: 8}} bold>
-            Kota
-          </Text>
-          <InputPicker
-            data={province?.kota}
-            title={'Pilih Kota'}
-            placeholder={'Pilih Kota'}
+            data={dist}
+            title={'Pilih Kecamatan'}
+            placeholder={'Pilih Kecamatan'}
             close={() => setV2(false)}
             open={() => setV2(true)}
             setValue={x => setKota(x)}

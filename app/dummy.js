@@ -738,6 +738,20 @@ export const regions = [
   },
 ];
 
+export const dist = [
+  'Arungkeke',
+  'Bangkala',
+  'Bangkala Barat',
+  'Batang',
+  'Binamu',
+  'Bontomaramba',
+  'Kelara',
+  'Rumbia',
+  'Tamalatea',
+  'Tarowang',
+  'Turatea',
+];
+
 export const menu = [
   {
     id: 1,

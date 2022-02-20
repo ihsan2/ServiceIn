@@ -283,7 +283,7 @@ const detail = ({route}) => {
             alignSelf: 'center',
           }}>
           {item?.status === 'cancel' || item?.status === 'complete' ? (
-            item?.status === 'complete' && !item?.fback ? (
+            item?.status === 'complete' ? (
               <Button
                 loading={loadTolak}
                 fullWidth
@@ -292,7 +292,7 @@ const detail = ({route}) => {
                 Nilai Orderan
               </Button>
             ) : null
-          ) : (
+          ) : item?.status === 'waiting' ? (
             <Button
               loading={loadTolak}
               fullWidth
@@ -300,6 +300,19 @@ const detail = ({route}) => {
               bgMain={colors.red}>
               Batalkan Pesanan
             </Button>
+          ) : (
+            <View
+              style={{
+                backgroundColor: '#E5E7E9',
+                padding: 12,
+                borderRadius: 10,
+              }}>
+              <Text center>
+                Anda tidak dapat membatalkan pesanan saat teknisi sudah ke
+                tempatmu. Silahkan hubungi teknisi terlebih dahulu untuk
+                konfirmasi pembatalan.
+              </Text>
+            </View>
           )}
         </View>
       </ScrollView>

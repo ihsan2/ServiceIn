@@ -52,6 +52,7 @@ const index = ({navigation, route}) => {
   const [f1, setF1] = useState(false);
 
   const [est, setEst] = useState('');
+  const [desc, setDesc] = useState('');
 
   const dispatch = useDispatch();
   const users = useSelector(state => state.userState.users);
@@ -87,10 +88,13 @@ const index = ({navigation, route}) => {
   };
 
   const _submit = async () => {
-    let empty = !value1 || !value2;
+    let empty = !value1 || !value2 || !desc;
 
     if (empty) {
-      showAlert({text: 'Merk dan Kerusakan wajib diisi.', type: 'error'});
+      showAlert({
+        text: 'Merk, Kerusakan, dan Deskripsi wajib diisi.',
+        type: 'error',
+      });
       return;
     }
 
@@ -156,6 +160,7 @@ const index = ({navigation, route}) => {
         type: value1,
         merk: value2,
         photo: urlPhoto,
+        desc: desc,
       };
       navigation.navigate('ListService', {
         item: {...item, ...d},
@@ -340,7 +345,7 @@ const index = ({navigation, route}) => {
             }}
           />
 
-          <View style={{width: '100%', marginTop: 16}}>
+          {/* <View style={{width: '100%', marginTop: 16}}>
             <View
               style={{
                 marginBottom: 10,
@@ -369,6 +374,18 @@ const index = ({navigation, route}) => {
               <MapV lat={lat} lng={lng} />
             </View>
             <Text style={{marginTop: 5}}>{address}</Text>
+          </View> */}
+          <View style={{width: '100%', marginTop: 10, marginBottom: 50}}>
+            <Text style={{marginBottom: 4}} bold>
+              Deskripsi
+            </Text>
+            <Input
+              value={desc}
+              multiline={true}
+              onChangeText={x => {
+                setDesc(x);
+              }}
+            />
           </View>
           <View style={{marginTop: 20, backgroundColor: 'transparent'}}>
             <Button fullWidth onPress={_submit} loading={load}>

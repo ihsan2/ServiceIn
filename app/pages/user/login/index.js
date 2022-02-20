@@ -11,13 +11,18 @@ import * as colors from '../../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUsers, setRole, setUser} from '../../../redux/actions/user';
 import {showAlert} from '../../../alert';
+import uuid from 'react-native-uuid';
+import database from '@react-native-firebase/database';
 
 const index = ({navigation}) => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.userState.users);
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [load, setLoad] = useState(false);
+  const [isValid, setValid] = useState(false);
 
   useEffect(() => {
     dispatch(getUsers());
@@ -25,38 +30,60 @@ const index = ({navigation}) => {
 
   const _login = () => {
     const x = users.filter(k => k.role === 'user' || k.role === 'admin');
-    let empty = !email || !password;
+    let empty = !phone;
 
     if (empty) {
-      showAlert({text: 'Email dan Password wajib diisi.', type: 'error'});
+      showAlert({text: 'Nomor Telepon wajib diisi.', type: 'error'});
       return;
     }
 
     let loginData = x.filter(
-      k => k.email.toLowerCase() === email.toLowerCase(),
+      k => k?.phone?.toLowerCase() === phone.toLowerCase(),
     );
 
     if (loginData.length === 0) {
-      showAlert({text: 'Email tidak terdaftar.', type: 'error'});
+      setValid(true);
+    } else {
+      setLoad(true);
+      setTimeout(() => {
+        dispatch(setRole(loginData[0].role));
+        dispatch(setUser(loginData[0]));
+        if (loginData[0].role === 'user') {
+          navigation.replace('HomeUser');
+        } else {
+          navigation.replace('AdminHome');
+        }
+        setLoad(false);
+      }, 1000);
+    }
+  };
+
+  const _regis = () => {
+    let empty = !name;
+
+    if (empty) {
+      showAlert({text: 'Nama wajib diisi.', type: 'error'});
       return;
     }
 
-    if (loginData[0].password !== password) {
-      showAlert({text: 'Password salah.', type: 'error'});
-      return;
-    }
-
+    let uid = uuid.v4();
+    let data = {
+      name,
+      phone,
+      role: 'user',
+      uid,
+    };
     setLoad(true);
-    setTimeout(() => {
-      dispatch(setRole(loginData[0].role));
-      dispatch(setUser(loginData[0]));
-      if (loginData[0].role === 'user') {
+    database()
+      .ref(`/users/${uid}`)
+      .set(data)
+      .then(() => {
+        showAlert({text: 'Berhasil login.'});
+        dispatch(setRole('user'));
+        dispatch(setUser(data));
         navigation.replace('HomeUser');
-      } else {
-        navigation.replace('AdminHome');
-      }
-      setLoad(false);
-    }, 1000);
+        setLoad(false);
+      });
   };
 
   return (
@@ -84,38 +111,35 @@ const index = ({navigation}) => {
         </View>
         <View style={{width: '100%'}}>
           <Text style={{marginBottom: 8}} bold>
-            Email
+            Masukkan No. HP
           </Text>
           <Input
-            placeholder={'user@mail.com'}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={x => setEmail(x)}
+            placeholder={'082xxxxxxxx'}
+            keyboardType="phone-pad"
+            value={phone}
+            onChangeText={x => setPhone(x)}
           />
         </View>
-        <View style={{width: '100%', marginTop: 16}}>
-          <Text style={{marginBottom: 8}} bold>
-            Password
-          </Text>
-          <InputPassword
-            placeholder={'Minimal 6 Karaketer'}
-            value={password}
-            onChangeText={x => setPassword(x)}
-          />
-        </View>
+
+        {isValid && (
+          <View style={{width: '100%', marginTop: 10}}>
+            <Text style={{marginBottom: 8}} bold>
+              Nomor Anda belum terdaftar. Silahkan masukkan nama Anda terlebih
+              dahulu untuk melanjutkan.
+            </Text>
+            <Input
+              placeholder={'Masukkan nama Anda'}
+              value={name}
+              onChangeText={x => setName(x)}
+            />
+          </View>
+        )}
+
         <View style={{marginTop: 16}}>
-          <Button onPress={_login} fullWidth loading={load}>
+          <Button onPress={!isValid ? _login : _regis} fullWidth loading={load}>
             Masuk
           </Button>
         </View>
-        <TouchableOpacity
-          style={{marginTop: 16, alignItems: 'center'}}
-          onPress={() => navigation.navigate('RegisterUser')}>
-          <Text center bold style={{color: colors.darkGrey}}>
-            Belum Punya Akun?{' '}
-            <Text style={{color: colors.primary}}>Daftar Sekarang</Text>
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
     </Wrapper>
   );
