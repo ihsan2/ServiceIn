@@ -63,6 +63,7 @@ const list = ({navigation, route}) => {
       jenis: data.name,
       merk: data.merk,
       photo: data.photo,
+      thum: data.thum,
       status: 'waiting',
       teknisi: {
         name: item.name,

@@ -36,6 +36,8 @@ const index = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
 
+  const [pic, setPic] = useState('');
+
   const [load, setLoad] = useState(false);
   const users = useSelector(state => state.userState.users);
 
@@ -46,6 +48,8 @@ const index = ({navigation}) => {
       !password ||
       !phone ||
       !kota ||
+      !pic ||
+      !address ||
       jasa.filter(k => k.select).length === 0;
     let isValidEmail = emailRegex().test(email);
     let isValidPass = password.length < 6 ? false : true;
@@ -88,6 +92,7 @@ const index = ({navigation}) => {
       keahlian: jasa.filter(k => k.select),
       isUpload: false,
       verified: false,
+      pic,
     };
 
     setLoad(true);
@@ -109,7 +114,7 @@ const index = ({navigation}) => {
     Geolocation.getCurrentPosition(info => {
       setLat(info.coords.latitude);
       setLng(info.coords.longitude);
-      _getAddress(info.coords.latitude, info.coords.longitude);
+      // _getAddress(info.coords.latitude, info.coords.longitude);
     });
   };
 
@@ -155,6 +160,16 @@ const index = ({navigation}) => {
         </View>
         <View style={{width: '100%', marginTop: 16}}>
           <Text style={{marginBottom: 8}} bold>
+            Nama Penaggung Jawab
+          </Text>
+          <Input
+            placeholder={'Nama Penaggung Jawab'}
+            value={pic}
+            onChangeText={x => setPic(x)}
+          />
+        </View>
+        <View style={{width: '100%', marginTop: 16}}>
+          <Text style={{marginBottom: 8}} bold>
             Nomor Handphone
           </Text>
           <Input
@@ -186,6 +201,18 @@ const index = ({navigation}) => {
           />
         </View>
 
+        <View style={{width: '100%', marginTop: 16, marginBottom: 50}}>
+          <Text style={{marginBottom: 8}} bold>
+            Alamat Lengkap
+          </Text>
+          <Input
+            placeholder={'Alamat lengkap'}
+            multiline
+            value={address}
+            onChangeText={x => setAddress(x)}
+          />
+        </View>
+
         <View style={{width: '100%', marginTop: 16}}>
           <View
             style={{
@@ -204,7 +231,7 @@ const index = ({navigation}) => {
                   onPress: (x, y) => {
                     setLat(x);
                     setLng(y);
-                    _getAddress(x, y);
+                    // _getAddress(x, y);
                   },
                 })
               }>

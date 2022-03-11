@@ -27,6 +27,8 @@ import storage from '@react-native-firebase/storage';
 import ModalUpload from '../../../components/modal/upload';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import uuid from 'react-native-uuid';
+import RNFetchBlob from 'rn-fetch-blob';
+import {createThumbnail} from 'react-native-create-thumbnail';
 
 Geocoder.init('AIzaSyDh0_cYDi7QnGOaXyax9jN2gdeD-X5jDR0');
 
@@ -64,6 +66,8 @@ const index = ({navigation, route}) => {
     return res;
   });
 
+  let price = itemKerusakan.filter(el => el.value === value1)[0]?.price;
+
   useEffect(() => {
     _getLocation();
     dispatch(getUsers());
@@ -87,7 +91,13 @@ const index = ({navigation, route}) => {
     }).then(info => setAddress(info.results[0].formatted_address));
   };
 
+  const getPathForFirebaseStorage = async uri => {
+    const stat = await RNFetchBlob.fs.stat(uri);
+    return stat.path;
+  };
   const _submit = async () => {
+    let thum = await createThumbnail({url: f1[0].uri});
+
     let empty = !value1 || !value2 || !desc;
 
     if (empty) {
@@ -148,8 +158,15 @@ const index = ({navigation, route}) => {
       }
 
       let id = uuid.v4();
-      await storage().ref(`foto-kerusakan/${id}.jpg`).putFile(f1[0].uri);
+      const documentUri = await getPathForFirebaseStorage(f1[0].uri);
+      const documentUri1 = await getPathForFirebaseStorage(thum.path);
+
+      await storage().ref(`foto-kerusakan/${id}.mp4`).putFile(documentUri);
       let urlPhoto = await storage()
+        .ref(`foto-kerusakan/${id}.mp4`)
+        .getDownloadURL();
+      await storage().ref(`foto-kerusakan/${id}.jpg`).putFile(documentUri1);
+      let phot = await storage()
         .ref(`foto-kerusakan/${id}.jpg`)
         .getDownloadURL();
 
@@ -161,6 +178,7 @@ const index = ({navigation, route}) => {
         merk: value2,
         photo: urlPhoto,
         desc: desc,
+        thum: phot,
       };
       navigation.navigate('ListService', {
         item: {...item, ...d},
@@ -176,8 +194,9 @@ const index = ({navigation, route}) => {
 
     for (let x in snap.val()) {
       let newD = {
-        label: snap.val()[x],
-        value: snap.val()[x],
+        label: snap.val()[x].split(' && ')[0],
+        value: snap.val()[x].split(' && ')[0],
+        price: snap.val()[x].split(' && ')[1],
       };
       arr = [...arr, newD];
     }
@@ -299,7 +318,17 @@ const index = ({navigation, route}) => {
                 _renderImage({uri: f1[0].uri, close: () => setF1(null)})
               ) : (
                 <TouchableOpacity
-                  onPress={() => setV1(true)}
+                  onPress={() => {
+                    launchImageLibrary(
+                      {
+                        mediaType: 'video',
+                      },
+                      res => {
+                        setV1(false);
+                        setF1(res?.assets);
+                      },
+                    );
+                  }}
                   style={{alignItems: 'center'}}>
                   <MCI name="upload-outline" color={colors.grey} size={60} />
                   <Text color={colors.grey} bold>
@@ -310,12 +339,21 @@ const index = ({navigation, route}) => {
             </View>
           </View>
 
-          <View style={{width: '100%', marginTop: 20}}>
-            <Text style={{marginBottom: 4}} bold>
-              Estimasi Harga
-            </Text>
-            <Text style={{marginBottom: 8}}>{est}</Text>
-          </View>
+          {value1 ? (
+            <View style={{width: '100%', marginTop: 20}}>
+              <Text style={{marginBottom: 4}} bold>
+                Harga
+              </Text>
+              <Text style={{marginBottom: 8}}>{price}</Text>
+            </View>
+          ) : (
+            <View style={{width: '100%', marginTop: 20}}>
+              <Text style={{marginBottom: 4}} bold>
+                Estimasi Harga
+              </Text>
+              <Text style={{marginBottom: 8}}>{est}</Text>
+            </View>
+          )}
 
           <ModalUpload
             title={'Foto Kerusakan'}

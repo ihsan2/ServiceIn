@@ -252,12 +252,23 @@ const detail = ({route}) => {
 
           {item?.photo && (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Image', {uri: item?.photo})}
+              onPress={() => navigation.navigate('WebView', {url: item?.photo})}
               style={{marginVertical: 20}}>
               <Image
-                source={{uri: item?.photo}}
+                source={{uri: item?.thum}}
                 style={{width: 200, height: 200}}
               />
+              <View
+                style={{
+                  width: 200,
+                  height: 200,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0,0,0,0.2)',
+                }}>
+                <MCI name="play" size={60} color={colors.blue} />
+              </View>
             </TouchableOpacity>
           )}
 

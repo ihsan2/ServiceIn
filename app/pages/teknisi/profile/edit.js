@@ -40,6 +40,7 @@ const index = ({navigation}) => {
   let prov = regions.filter(k => user?.provinsi === k.provinsi)[0];
 
   const [name, setName] = useState(user?.name);
+  const [pic, setPIC] = useState(user?.pic);
   const [phone, setPhone] = useState(user?.phone);
   const [load, setLoad] = useState(false);
 
@@ -157,6 +158,7 @@ const index = ({navigation}) => {
 
     let data = {
       name,
+      pic,
       phone,
       provinsi: province.provinsi,
       kecamatan: kota,
@@ -253,6 +255,16 @@ const index = ({navigation}) => {
         </View>
         <View style={{width: '100%', marginTop: 16}}>
           <Text style={{marginBottom: 8}} bold>
+            Nama Penaggung Jawab
+          </Text>
+          <Input
+            placeholder={'Nama Penanggung Jawab'}
+            value={pic}
+            onChangeText={x => setPIC(x)}
+          />
+        </View>
+        <View style={{width: '100%', marginTop: 16}}>
+          <Text style={{marginBottom: 8}} bold>
             Nomor Handphone
           </Text>
           <Input
@@ -260,6 +272,18 @@ const index = ({navigation}) => {
             keyboardType="phone-pad"
             value={phone}
             onChangeText={x => setPhone(x)}
+          />
+        </View>
+
+        <View style={{width: '100%', marginTop: 16, marginBottom: 50}}>
+          <Text style={{marginBottom: 8}} bold>
+            Alamat Lengkap
+          </Text>
+          <Input
+            placeholder={'Alamat lengkap'}
+            multiline
+            value={address}
+            onChangeText={x => setAddress(x)}
           />
         </View>
 
@@ -281,7 +305,7 @@ const index = ({navigation}) => {
                   onPress: (x, y) => {
                     setLat(x);
                     setLng(y);
-                    _getAddress(x, y);
+                    // _getAddress(x, y);
                   },
                 })
               }>

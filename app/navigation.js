@@ -41,6 +41,9 @@ import AdminDetail from './pages/user/admin/detail';
 // Image
 import ImagePage from './pages/image';
 
+// WebView
+import WebView from './pages/webview';
+
 // Maps
 import MapsPage from './pages/maps';
 
@@ -157,6 +160,12 @@ function App() {
           name="Image"
           component={ImagePage}
           options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="WebView"
+          component={WebView}
+          options={{headerShown: true, title: 'Video Kerusakan'}}
         />
 
         <Stack.Screen
